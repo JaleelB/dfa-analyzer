@@ -1,0 +1,71 @@
+class DFAnalyzer:
+    // Private members:
+    Define a hash function for the unordered_map key (pair<char, char>)
+    Define an unordered_map to store the DFA's transition table
+    Define a set to store the accept states
+    Define a char to store the start state
+    Define a bool to indicate if the DFA is valid
+
+    // Helper function to validate instruction format
+    isValidInstruction(instruction):
+        If instruction length is less than 3, return false
+        If first and last characters are not digits, return false
+        For each character between the first and last characters:
+            If the character is not a lowercase letter, return false
+        Return true
+
+    // Public methods:
+    // Default constructor
+    DFAnalyzer():
+        Initialize DFA as invalid
+        Initialize start state as undefined
+
+    // Copy constructor
+    DFAnalyzer(other):
+        Copy other's transition table, accept states, start state, and isValidDFA flag
+
+    // Assignment operator
+    operator=(other):
+        Assign other's transition table, accept states, start state, and isValidDFA flag to the current object
+
+    // Destructor
+    ~DFAnalyzer():
+        // No dynamically allocated resources to release
+
+    // Load DFA from a file
+    Load(fileName):
+        Open file with the given fileName
+        If file cannot be opened, mark DFA as invalid and return
+        For each line in the file:
+            If line is not a valid instruction, mark DFA as invalid and return
+            Extract fromState, symbols, and toState from the line
+            Add transitions for each symbol in symbols
+        Close the file and mark DFA as valid
+
+    // Set start state
+    SetStartState(state):
+        If DFA is valid and state is a digit, set startState to state
+
+    // Modify accept state
+    ModifyAcceptState(state):
+        If DFA is valid and state is a digit:
+            If state is in acceptStates, remove it
+            Else, add state to acceptStates
+
+    // Check if an input string is accepted by the DFA
+    IsAccepted(input):
+        If DFA is not valid or start state is not defined, return false
+        Set currentState to startState
+        For each symbol in input:
+            If symbol is not a lowercase letter, return false
+            Update currentState based on the transition table
+        Return true if currentState is in acceptStates, else return false
+
+    // Convert the DFA's transition table to a string
+    ToString():
+        If DFA is not valid, return "Invalid DFA"
+        Initialize an empty stringstream
+        For each entry in the transition table:
+            Add a tuple (fromState, symbol, toState) to the stringstream
+        Return the stringstream's content as a string
+
