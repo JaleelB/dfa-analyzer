@@ -1,8 +1,7 @@
 class DFAnalyzer:
     // Private members:
-    Define a hash function for the unordered_map key (pair<char, char>)
-    Define an unordered_map to store the DFA's transition table
-    Define a set to store the accept states
+    Define a 2D array 'transitions' to store the transition table (10 states x 26 lowercase letters)
+    Define an array 'acceptStates' to store accept states information (10 states)
     Define a char to store the start state
     Define a bool to indicate if the DFA is valid
 
@@ -18,7 +17,8 @@ class DFAnalyzer:
     // Default constructor
     DFAnalyzer():
         Initialize DFA as invalid
-        Initialize start state as undefined
+        Initialize start state as empty/undefined
+        Initialize acceptStates as false for all states
 
     // Copy constructor
     DFAnalyzer(other):
@@ -37,9 +37,11 @@ class DFAnalyzer:
         Open file with the given fileName
         If file cannot be opened, mark DFA as invalid and return
         For each line in the file:
+            Remove spaces from the line
             If line is not a valid instruction, mark DFA as invalid and return
-            Extract fromState, symbols, and toState from the line
-            Add transitions for each symbol in symbols
+            Extract initialState, symbols, and destinationState from the line
+            For each symbol in symbols:
+                Update the transition table
         Close the file and mark DFA as valid
 
     // Set start state
@@ -48,9 +50,7 @@ class DFAnalyzer:
 
     // Modify accept state
     ModifyAcceptState(state):
-        If DFA is valid and state is a digit:
-            If state is in acceptStates, remove it
-            Else, add state to acceptStates
+        If DFA is valid and state is a digit, toggle acceptStates for the given state
 
     // Check if an input string is accepted by the DFA
     IsAccepted(input):
@@ -59,13 +59,12 @@ class DFAnalyzer:
         For each symbol in input:
             If symbol is not a lowercase letter, return false
             Update currentState based on the transition table
-        Return true if currentState is in acceptStates, else return false
+        Return true if currentState is an accept state, else return false
 
     // Convert the DFA's transition table to a string
     ToString():
         If DFA is not valid, return "Invalid DFA"
         Initialize an empty stringstream
         For each entry in the transition table:
-            Add a tuple (fromState, symbol, toState) to the stringstream
+            Add a tuple (initialState, symbol, destinationState) to the stringstream
         Return the stringstream's content as a string
-
