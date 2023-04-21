@@ -91,6 +91,9 @@ class DFAnalyzer {
             }
 
             std::string line;
+            bool states_seen[10] = {false};
+            bool symbols_seen[26] = {false};
+
             while (std::getline(inFile, line)) {
                 // Remove spaces from the line.
                 line.erase(std::remove_if(line.begin(), line.end(), isspace), line.end());
@@ -108,6 +111,21 @@ class DFAnalyzer {
                 // Update the transition table for each symbol in the instruction.
                 for (const char &symbol : symbols) {
                     transitions[initialState - '0'][symbol - 'a'] = std::string(1, destinationState);
+                    states_seen[initialState - '0'] = true;
+                    symbols_seen[symbol - 'a'] = true;
+                }
+            }
+
+            // Check that every state has a transition for every symbol.
+            for (int i = 0; i < 10; ++i) {
+                if (states_seen[i]) {
+                    for (int j = 0; j < 26; ++j) {
+                        if (symbols_seen[j] && transitions[i][j].empty()) {
+                            isValidDFA = false;
+                            inFile.close();
+                            return;
+                        }
+                    }
                 }
             }
 
@@ -115,6 +133,7 @@ class DFAnalyzer {
             inFile.close();
             isValidDFA = true;
         }
+
 
         // The SetStartState method sets the start state of the DFA if the given state is a digit and the DFA is valid.
         void SetStartState(char state) {
